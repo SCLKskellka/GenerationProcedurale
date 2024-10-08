@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DonjonsCreator {
+public class DonjonsCreator : MonoBehaviour {
    public static int Seed;
    public int Width;
    public int Height;
@@ -59,10 +59,6 @@ public class DonjonsCreator {
          }
          else {
             int cutPosition = rand.Next(cutRoom[3], cutRoom[1]); //niveau de la coupure
-            /*
-             * On créer donc les deux salles nouvellements existantes, avant et après la coupure.
-             * La première est celle d'avant, la seconde est celle d'après.
-             */
             int[] newRoom1 = new []{
                /*tailleX*/ cutRoom[0],
                /*tailleY*/ cutRoom[3] + cutPosition -1,
@@ -80,5 +76,10 @@ public class DonjonsCreator {
          }
          return BSP(donjon, cutQtt--);
       }
+   }
+
+   public void DisplayDonjon(List<int[]> donjon)
+   {
+      
    }
 }
