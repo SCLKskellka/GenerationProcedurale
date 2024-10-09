@@ -534,8 +534,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e70194ed67b204e9d200027e9156d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Seed: 666
   Width: 60
   Height: 20
+  CutQtt: 4
 --- !u!4 &1234142975
 Transform:
   m_ObjectHideFlags: 0

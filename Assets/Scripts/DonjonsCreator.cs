@@ -1,13 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DonjonsCreator : MonoBehaviour {
-   public static int Seed;
+   public int Seed = 666;
    public int Width;
    public int Height;
+   public int CutQtt = 1;
    
-   private System.Random rand = new System.Random(Seed);
+   
+   private List<int[]> _donjon = new List<int[]>();
+   private void Start()
+   {
+      
+      int[] a = new[] { 1, 1, 1, 1 };
+      int[] b = new[] { 2, 2, 3, 3 };
+      List<int[]> ab = new List<int[]>();
+      ab.Add(a);
+      ab.Add(b);
+      DisplayDonjon(ab);
+      DisplayDonjon(BSP(_donjon, CutQtt));
+   }
 
    /**
     * Les salles du donjon sont des tableaux de Int sous la forme:
@@ -31,25 +45,26 @@ public class DonjonsCreator : MonoBehaviour {
             }
          }
          int[] cutRoom = donjon[tmp];
+         donjon.Remove(donjon[tmp]);
          
          /*
           * On défini si on la coupe sur sa longueur ou sa largeur.
           * Dans ce cas je décide de choisir de couper la plus grande longueur en deux à un endroit aléatoire.
           */
          if (cutRoom[0] >= cutRoom[1]) {
-            int cutPosition = rand.Next(cutRoom[2], cutRoom[0]); //niveau de la coupure
+            System.Random rand = new System.Random(Seed);
+            int cutPosition = rand.Next(cutRoom[2], cutRoom[2]+cutRoom[0]); //niveau de la coupure
             /*
              * On créer donc les deux salles nouvellements existantes, avant et après la coupure.
              * La première est celle d'avant, la seconde est celle d'après.
              */
-            int[] newRoom1 = new []{
-               /*tailleX*/ cutRoom[2] + cutPosition -1,
+            int[] newRoom1 = { /*tailleX*/ cutRoom[2] + cutPosition -1,
                /*tailleY*/ cutRoom[1],
                /*ancreX*/ cutRoom[2],
                /*ancreY*/ cutRoom[3]
             };
-            int[] newRoom2 = new []{
-               /*tailleX*/ cutRoom[0] - cutPosition + 1,
+            int[] newRoom2 = {
+               /*tailleX*/ cutRoom[0] - (cutRoom[2] + cutPosition + 1),
                /*tailleY*/ cutRoom[1],
                /*ancreX*/ cutRoom[2] + cutPosition + 1,
                /*ancreY*/ cutRoom[3]
@@ -58,7 +73,8 @@ public class DonjonsCreator : MonoBehaviour {
             donjon.Add(newRoom2);
          }
          else {
-            int cutPosition = rand.Next(cutRoom[3], cutRoom[1]); //niveau de la coupure
+            System.Random rand = new System.Random(Seed);
+            int cutPosition = rand.Next(cutRoom[3], cutRoom[3] + cutRoom[1]); //niveau de la coupure
             int[] newRoom1 = new []{
                /*tailleX*/ cutRoom[0],
                /*tailleY*/ cutRoom[3] + cutPosition -1,
@@ -74,12 +90,18 @@ public class DonjonsCreator : MonoBehaviour {
             donjon.Add(newRoom1);
             donjon.Add(newRoom2);
          }
-         return BSP(donjon, cutQtt--);
+
+         cutQtt -= 1;
+         return BSP(donjon, cutQtt);
       }
    }
 
    public void DisplayDonjon(List<int[]> donjon)
    {
-      
+      for (int i = 0; i < donjon.Count; i++)
+      {
+         Debug.Log("Salle " + i + ": TailleX = " + donjon[i][0] + " TailleY = " + donjon[i][1] + " AncreX= " + donjon[i][2] + 
+                   " AncreY= "+ donjon[i][3] + ".");
+      }
    }
 }
