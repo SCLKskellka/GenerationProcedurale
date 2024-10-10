@@ -348,7 +348,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 25
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -373,7 +373,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 44.5, y: 25, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,9 +535,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Seed: 666
-  Width: 60
-  Height: 20
-  CutQtt: 4
+  WidthX: 50
+  HeightY: 33
+  CutQtt: 2
+  WhiteTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
+  BlackTile: {fileID: 11400000, guid: 213c477ff5e85ff4b906844f34f47d01, type: 2}
+  Tilemap: {fileID: 310514188}
 --- !u!4 &1234142975
 Transform:
   m_ObjectHideFlags: 0
