@@ -26,80 +26,76 @@ public class DonjonsCreator : MonoBehaviour {
     * TailleX | TailleY | AncreX | AncreY | AirSalle
     */
    public List<int[]> BSP(List<int[]> dungeon, int cutQtt) {
+      System.Random rand1 = new System.Random(Seed);
       if (dungeon.Count == 0) {
          int[] firstRoom = new []{WidthX, HeightY, 0, 0, WidthX*HeightY};
          dungeon.Add(firstRoom);
       }
       if (cutQtt <= 0) return dungeon;
-      int tmp = 0;
-      if (dungeon.Count > 1) {
-         for (int i = 0; i < dungeon.Count; i++) {
-            if (tmp != i && dungeon[tmp][4] < dungeon[i][4]) tmp = i;
-         }
-      }
-      int[] cutRoom = dungeon[tmp];
-      dungeon.Remove(dungeon[tmp]);
-         
-      if (cutRoom[0] > cutRoom[1] && cutRoom[0] >= 3) {
-         cutQtt -= 1;
-         return BSP(Cut2DRoomIn2DDungeon(dungeon, cutRoom, 'X'), cutQtt);
-      }
-      if (cutRoom[0] <= cutRoom[1] && cutRoom[1] >= 3) {
-         cutQtt -= 1;
-         return BSP(Cut2DRoomIn2DDungeon(dungeon, cutRoom, 'Y'), cutQtt);
-      }
       cutQtt -= 1;
-      return BSP(dungeon, cutQtt);
+      return BSP(Cut2DRoomIn2DDungeon(dungeon, RoomToCutSelection(dungeon)), cutQtt);
    }
 
+   private int[] RoomToCutSelection(List<int[]> dungeon) {
+      int[] tmp = dungeon[0];
+      for (int i = 0; i < dungeon.Count; i++) {
+         if (tmp[4] < dungeon[i][4]) tmp = dungeon[i];
+      }
+      return tmp;
+   }
+   
    /**
     * Coupe la room, en fonction de l'axe choisi, en deux et renvoie le donjon contenant les room nouvellement créés
     */
-   private List<int[]> Cut2DRoomIn2DDungeon(List<int[]> dungeon,int[] cutedRoom, char axe) {
-      System.Random rand = new System.Random(Seed);
+   private List<int[]> Cut2DRoomIn2DDungeon(List<int[]> dungeon,int[] cutedRoom) {
+      System.Random rand2 = new System.Random(Seed);
       int[] newRoom1 = new int[cutedRoom.Length];
       int[] newRoom2 = new int[cutedRoom.Length];
       int cutPosition;
-      switch (axe) {
-         case 'X':
-            cutPosition = rand.Next(cutedRoom[2], cutedRoom[2]+cutedRoom[0]);
-            newRoom1[0] = cutedRoom[2] + cutPosition ;                     /*tailleX*/
-            newRoom1[1] = cutedRoom[1];                                    /*tailleY*/
-            newRoom1[2] = cutedRoom[2];                                    /*ancreX*/ 
-            newRoom1[3] = cutedRoom[3];                                    /*ancreY*/
-            newRoom1[4] = cutedRoom[0] * cutedRoom[1];                     /*airSalle*/
+      if (cutedRoom[0] > cutedRoom[1] && cutedRoom[0] >= 3) {
+         cutPosition = rand2.Next(cutedRoom[2], cutedRoom[2]+cutedRoom[0]);
+         if(cutedRoom[2]==0) cutPosition = rand2.Next(1, cutedRoom[2] + cutedRoom[0]);
+         
+         newRoom1[0] = cutPosition ;/*tailleX*/ newRoom1[1] = cutedRoom[1];/*tailleY*/
+         newRoom1[2] = cutedRoom[2];/*ancreX*/ newRoom1[3] = cutedRoom[3];/*ancreY*/
+         newRoom1[4] = newRoom1[0] * newRoom1[1];/*airSalle*/
 
-            newRoom2[0] = cutedRoom[0] - (cutedRoom[2] + cutPosition ) -1;    /*tailleX*/
-            newRoom2[1] = cutedRoom[1];                                    /*tailleY*/
-            newRoom2[2] = cutedRoom[2] + cutPosition + 1 ;                 /*ancreX*/
-            newRoom2[3] = cutedRoom[3];                                    /*ancreY*/
-            newRoom2[4] = cutedRoom[0] * cutedRoom[1];                     /*airSalle*/
-            break;
-         case 'Y':
-             cutPosition = rand.Next(cutedRoom[3], cutedRoom[3] + cutedRoom[1]);
-            newRoom1[0] = cutedRoom[0];                                /*tailleX*/
-            newRoom1[1] = cutedRoom[3] + cutPosition;                  /*tailleY*/
-            newRoom1[2] = cutedRoom[2];                                /*ancreX*/
-            newRoom1[3] = cutedRoom[3];                                /*ancreY*/
-            newRoom1[4] = cutedRoom[0] * cutedRoom[1];                 /*airSalle*/
-
-            newRoom2[0] = cutedRoom[0];                                       /*tailleX*/
-            newRoom2[1] = cutedRoom[1] - (cutedRoom[3] + cutPosition ) -1 ;      /*tailleY*/
-            newRoom2[2] = cutedRoom[2];                                       /*ancreX*/
-            newRoom2[3] = cutedRoom[3] + cutPosition + 1;                     /*ancreY*/
-            newRoom2[4] = cutedRoom[0] * cutedRoom[1];                        /*airSalle*/
-            break;
+         newRoom2[0] = cutedRoom[0] - cutPosition;/*tailleX*/ newRoom2[1] = cutedRoom[1];/*tailleY*/
+         newRoom2[2] = cutPosition;/*ancreX*/ newRoom2[3] = cutedRoom[3]; /*ancreY*/
+         newRoom2[4] = newRoom2[0] * newRoom2[1];/*airSalle*/
+         dungeon.Remove(cutedRoom);
+         dungeon.Add(newRoom1);
+         dungeon.Add(newRoom2);
       }
-      dungeon.Add(newRoom1);
-      dungeon.Add(newRoom2);
+            
+      if (cutedRoom[0] <= cutedRoom[1] && cutedRoom[1] >= 3){
+         cutPosition = rand2.Next(cutedRoom[3], cutedRoom[3] + cutedRoom[1]);
+         if(cutedRoom[3]==0) cutPosition = rand2.Next(1, cutedRoom[3] + cutedRoom[1]);
+
+         newRoom1[0] = cutedRoom[0];/*tailleX*/ newRoom1[1] = cutPosition;/*tailleY*/
+         newRoom1[2] = cutedRoom[2];/*ancreX*/ newRoom1[3] = cutedRoom[3];/*ancreY*/
+         newRoom1[4] = newRoom1[0] * newRoom1[1];/*airSalle*/
+
+         newRoom2[0] = cutedRoom[0];/*tailleX*/ newRoom2[1] = cutedRoom[1] - cutPosition;/*tailleY*/
+         newRoom2[2] = cutedRoom[2];/*ancreX*/ newRoom2[3] = cutPosition;/*ancreY*/
+         newRoom2[4] = newRoom2[0] * newRoom2[1];/*airSalle*/
+         dungeon.Remove(cutedRoom);
+         dungeon.Add(newRoom1);
+         dungeon.Add(newRoom2);
+      }
       return dungeon;
    }
 
-   public void DisplayDungeonInDebug(List<int[]> dungeon)
-   {
-      for (int i = 0; i < dungeon.Count; i++)
-      {
-         Debug.Log("Salle " + i + ": TailleX =" + dungeon[i][0] + " TailleY =" + dungeon[i][1] + " AncreX=" + dungeon[i][2] + 
+   private void ResizeRooms(List<int[]> dungeon) {
+      foreach (int[] room in dungeon) {
+         room[0] -= 2; room[1] -= 2; room[2]++; room[3]++;
+         if(room[0] <= 0 || room[1] <= 0)dungeon.Remove(room);
+      }
+   }
+   
+   public void DisplayDungeonInDebug(List<int[]> dungeon) {
+      for (int i = 0; i < dungeon.Count; i++) {
+         Debug.Log("Salle " + i + ": TailleX=" + dungeon[i][0] + " TailleY=" + dungeon[i][1] + " AncreX=" + dungeon[i][2] + 
                    " AncreY="+ dungeon[i][3] + ".");
       }
    }
@@ -113,4 +109,24 @@ public class DonjonsCreator : MonoBehaviour {
          }
       }
    }
+}
+//delaunay : https://www.gorillasun.de/blog/bowyer-watson-algorithm-for-delaunay-triangulation/
+struct Vertex {
+   public int x;
+   public int y;
+   public bool Equals(Vertex other){return x == other.x && y == other.y;}
+}
+
+struct Edge {
+   public Vertex a;
+   public Vertex b;
+   public bool Equals(Edge other){return a.Equals(other.a) && b.Equals(other.b);}
+}
+
+struct Triangle {
+   public Vertex a;
+   public Vertex b;
+   public Vertex c;
+   
+   
 }

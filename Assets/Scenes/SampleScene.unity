@@ -534,10 +534,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e70194ed67b204e9d200027e9156d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: 666
+  Seed: 1
   WidthX: 50
-  HeightY: 33
-  CutQtt: 2
+  HeightY: 60
+  CutQtt: 4
   WhiteTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
   BlackTile: {fileID: 11400000, guid: 213c477ff5e85ff4b906844f34f47d01, type: 2}
   Tilemap: {fileID: 310514188}
