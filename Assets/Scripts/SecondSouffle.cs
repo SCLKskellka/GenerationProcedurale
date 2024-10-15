@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -20,7 +21,7 @@ public class SecondSouffle : MonoBehaviour
    private void Start() {
       _random = new System.Random(Seed);
       InitiateDonjon();
-      MyDungeon = BSPsecond(MyDungeon);
+      MyDungeon = BSPsecond(MyDungeon,Cut);
       DisplayDungeonData();
       DisplayDungeon();
    }
@@ -31,7 +32,8 @@ public class SecondSouffle : MonoBehaviour
       MyDungeon.Add(room);
    }
 
-   public List<Room> BSPsecond(List<Room> dungeon) {
+   public List<Room> BSPsecond(List<Room> dungeon,int cut) {
+      if (cut <= 0) return dungeon;
       //Choix de la salle
       
       //Choix du coté à split
@@ -39,40 +41,39 @@ public class SecondSouffle : MonoBehaviour
       //select split position
       
       //split
-      dungeon = Split(dungeon,dungeon[_random.Next(0,dungeon.Count-1)],Coinflip(),Cut);
-      return dungeon;
+      dungeon = Split(dungeon,dungeon[_random.Next(0,dungeon.Count-1)],Coinflip());
+      cut -= 1;
+      return BSPsecond(dungeon,cut);
    }
    private int Coinflip(){return _random.Next(0,1);}
 /**
  * sideToSplit = 'x' || 'y'
  */
-   public List<Room> Split(List<Room> dungeon, Room roomToSplit, int sideToSplit, int cut) {
-      if(cut <= 0)return dungeon;
+   public List<Room> Split(List<Room> dungeon, Room roomToSplit, int sideToSplit) {
+      Room roomPartOne = new Room(roomToSplit);
+      Room roomPartTwo = new Room(roomToSplit);
       switch (sideToSplit) {
          case 0:
             int pos = _random.Next(roomToSplit.Anchor.x, roomToSplit.Size.x + roomToSplit.Anchor.x);
             Debug.Log("Pos"+pos);
-            Room roomPartOne = new Room(roomToSplit.Size.x - pos, roomToSplit.Size.y, 
-                                       roomToSplit.Anchor.x,roomToSplit.Anchor.y);
+            roomPartOne.Size.x = pos-roomPartOne.Anchor.x ;
             //Debug.Log("RoomPartOne: Size->"+roomPartOne.Size+" Anchor->"+roomPartOne.Anchor);
-            
-            Room roomPartTwo = new Room(roomToSplit.Size.x - roomPartOne.Size.x - 1, roomToSplit.Size.y, 
-                                       roomToSplit.Anchor.x + pos +2,roomToSplit.Anchor.y);
+            roomPartTwo.Size.x -= roomPartOne.Size.x - 1;
+            roomPartTwo.Anchor.x = pos+1;
             //Debug.Log("RoomPartTwo: Size->" + roomPartTwo.Size + " Anchor->" + roomPartTwo.Anchor);
             dungeon.Remove(roomToSplit);
             dungeon.Add(roomPartOne);
             dungeon.Add(roomPartTwo);
-            return Split(dungeon,dungeon[_random.Next(0,dungeon.Count-1)],Coinflip(),--cut);
+            return dungeon;
          case 1:
             pos = _random.Next(roomToSplit.Anchor.y, roomToSplit.Size.y + roomToSplit.Anchor.y);
-            roomPartOne = new Room(roomToSplit.Size.x, roomToSplit.Size.y - pos, 
-                                 roomToSplit.Anchor.x,roomToSplit.Anchor.y);
-            roomPartTwo = new Room(roomToSplit.Size.x , roomToSplit.Size.y- roomPartOne.Size.y - 1, 
-                                 roomToSplit.Anchor.x ,roomToSplit.Anchor.y+ pos +2);
+            roomPartOne.Size.y = pos - roomPartOne.Anchor.y;
+            roomPartTwo.Size.y -= roomPartOne.Size.y - 1;
+            roomPartTwo.Anchor.y = pos + 1;
             dungeon.Remove(roomToSplit);
             dungeon.Add(roomPartOne);
             dungeon.Add(roomPartTwo);
-            return Split(dungeon,dungeon[_random.Next(0,dungeon.Count-1)],Coinflip(),--cut);
+            return dungeon;
          default:
             Debug.LogError("Invalid side to Split");
             return dungeon;
@@ -98,12 +99,23 @@ public class SecondSouffle : MonoBehaviour
 
 public struct Room
 {
-   public Vector2Int Size { get; }
-   public Vector2Int Anchor { get; }
+   public Vector2Int Size;
+   public Vector2Int Anchor;
 
    public Room(int x, int y, int i, int j)
    {
       Size = new Vector2Int(x, y);
       Anchor = new Vector2Int(i, j);
+   }
+
+   public Room(Room origin)
+   {
+      Size = origin.Size;
+      Anchor = origin.Anchor;
+   }
+
+   public Room Clone(){
+      Room clone = new Room(Size.x, Size.y, Anchor.x, Anchor.y);
+      return clone;
    }
 }
