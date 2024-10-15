@@ -515,6 +515,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1234142975}
   - component: {fileID: 1234142974}
+  - component: {fileID: 1234142976}
   m_Layer: 0
   m_Name: DonjonCreator
   m_TagString: Untagged
@@ -529,7 +530,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1234142973}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95e70194ed67b204e9d200027e9156d4, type: 3}
   m_Name: 
@@ -537,7 +538,7 @@ MonoBehaviour:
   Seed: 1
   WidthX: 50
   HeightY: 60
-  CutQtt: 4
+  CutQtt: 3
   WhiteTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
   BlackTile: {fileID: 11400000, guid: 213c477ff5e85ff4b906844f34f47d01, type: 2}
   Tilemap: {fileID: 310514188}
@@ -556,6 +557,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1234142976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234142973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6922b9405d94b64c80742655697efe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Width: 12
+  Height: 80
+  MyTilemap: {fileID: 310514188}
+  MyTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
+  Seed: 78273
+  Cut: 8
 --- !u!1 &1575542893
 GameObject:
   m_ObjectHideFlags: 0
