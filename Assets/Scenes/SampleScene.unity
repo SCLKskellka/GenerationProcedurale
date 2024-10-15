@@ -569,12 +569,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6922b9405d94b64c80742655697efe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 12
-  Height: 80
+  Width: 50
+  Height: 20
   MyTilemap: {fileID: 310514188}
   MyTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
   Seed: 78273
-  Cut: 8
+  Cut: 3
 --- !u!1 &1575542893
 GameObject:
   m_ObjectHideFlags: 0
