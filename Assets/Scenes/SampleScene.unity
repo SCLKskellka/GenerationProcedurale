@@ -573,8 +573,8 @@ MonoBehaviour:
   Height: 20
   MyTilemap: {fileID: 310514188}
   MyTile: {fileID: 11400000, guid: 933fe516078b2fd439ddb3c706aff7e8, type: 2}
-  Seed: 78273
-  Cut: 3
+  Seed: 666
+  Cut: 5
 --- !u!1 &1575542893
 GameObject:
   m_ObjectHideFlags: 0
